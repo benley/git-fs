@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+%:
+	dh $@ --with=ocaml
+
+override_dh_auto_build:
+	make -C deps/ocamlfuse/lib || make -C deps/ocamlfuse/lib byte-code-library
+	omake
+	rm -f build/git-fs
+	ln build/git-fs.opt build/git-fs
+	dh_auto_build
