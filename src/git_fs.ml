@@ -267,13 +267,13 @@ let symlink_target hash =
   backtick_git [ "cat-file"; "blob"; Hash.to_string hash; ]
 
 
-let dir_stats = { (Unix.LargeFile.stat "." (* XXX *)) with
-  UL.st_perm = 0o500;
+let dir_stats = { (Unix.LargeFile.lstat "." (* XXX *)) with
+  UL.st_perm = 0o540;
   }
 let file_stats = { dir_stats with
   UL.st_kind = Unix.S_REG;
   UL.st_nlink = 1;
-  UL.st_perm = 0o400;
+  UL.st_perm = 0o440;
   (* /proc uses zero, it works.
    * /sys uses 4k.
    * zero doesn't work with fuse, at least high-level fuse;
@@ -283,13 +283,13 @@ let file_stats = { dir_stats with
   }
 let blob_stats size is_exe = { file_stats with
   UL.st_size = size;
-  UL.st_perm = if is_exe then 0o500 else 0o400;
+  UL.st_perm = if is_exe then 0o550 else 0o440;
   }
 
 let symlink_stats = { dir_stats with
   UL.st_kind = Unix.S_LNK;
   UL.st_nlink = 1;
-  UL.st_perm = 0o400;
+  UL.st_perm = 0o440;
   }
 
 
@@ -828,6 +828,7 @@ let do_read path buf ofs fh =
 
 let fuse_ops = {
       Fuse.default_operations with
+       Fuse.statfs = Unix_util.statvfs;
         Fuse.getattr = do_getattr;
         Fuse.opendir = do_opendir;
         Fuse.releasedir = do_releasedir;
@@ -878,6 +879,7 @@ let cmd_mount ?(debug=false) ?(allow_other=false) () =
       (* fuse doesn't guess the subtype anymore, if we give it fsname *)
       "-osubtype=" ^ fs_subtype;
       "-ofsname=" ^ fsname;
+      "-oallow_other";
       mountpoint;
       ] in
     let fuse_args = if debug then "-s"::"-d"::fuse_args else fuse_args in
