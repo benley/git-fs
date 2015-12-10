@@ -1,3 +1,12 @@
+git-fs (0~git20151210) unstable; urgency=medium
+
+  [ Nicolas Brousse ]
+  * add allow_other FUSE flag + change group permissions
+
+  [ Benjamin Staffin ]
+
+ -- Benjamin Staffin <bstaffin@fitbit.com>  Thu, 10 Dec 2015 02:34:08 +0000
+
 git-fs (0~git20150927) unstable; urgency=low
 
   * Initial release
