@@ -1,7 +1,3 @@
-git fs status: display if currently mounted.
-Distinct from git fs is-mounted, which uses the exit status and is
-meant to be machine-readable for prompts and the like.
-
 Map more stuff
   changeset trees, ie a tree showing the before/after of files touched by a changeset
   tags
@@ -30,6 +26,10 @@ Use inotify for better performance or accuracy.
 Symbolic refs are currently cached for too long.
 
 == Done
+
+git fs status: display if currently mounted.
+Distinct from git fs is-mounted, which uses the exit status and is
+meant to be machine-readable for prompts and the like.
 
 Remove the base64 refnames hack.
 Add a default mountpoint, and be singleton on that.

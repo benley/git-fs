@@ -905,6 +905,13 @@ let cmd_is_mounted () =
   else
     exit 1
 
+let cmd_status () =
+  if is_mounted () then
+    let lazy mountpoint = mountpoint_lazy in
+    prerr_endline (Printf.sprintf "Mounted on %S" mountpoint)
+  else
+    prerr_endline "Not mounted."
+
 let cmd_mtab () =
   BatEnum.iter (fun (git_dir_quoted, mountpoint) ->
     print_endline mountpoint) (mtab_lines ())
@@ -930,6 +937,7 @@ let _ =
   |[| _; "umount" |] -> cmd_umount ()
   |[| _; "show-mountpoint" |] -> cmd_show_mountpoint ()
   |[| _; "is-mounted" |] -> cmd_is_mounted ()
+  |[| _; "status" |] -> cmd_status ()
   |[| _; "mtab" |] -> cmd_mtab ()
   |[| _; "help" |] -> cmd_help ()
   |[| _; "fuse-help" |] -> cmd_fuse_help () (* For development *)
